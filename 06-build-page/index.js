@@ -1,5 +1,5 @@
 const path = require('path');
-const { mkdir, readFile} = require('fs/promises');
+const { mkdir, readFile, writeFile} = require('fs/promises');
 
 const distDir = path.join(__dirname, 'project-dist');
 
@@ -26,6 +26,6 @@ async function bundleHTML() {
     const componentFileSource = await readFile(componentPath, 'utf-8');
   
     templateSource = templateSource.replace(component, componentFileSource);
-    console.log(templateSource);
   }
+  await writeFile(path.join(distDir, 'index.html'), templateSource);
 }

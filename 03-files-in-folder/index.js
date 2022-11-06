@@ -10,7 +10,8 @@ findFilesInDir(pathToFolder);
 async function findFilesInDir(pathToFolder) {
   try {
     const files = await readdir(pathToFolder, {withFileTypes: true});
-    for (const file of files) {
+    const filteredFiles = files.filter( (file) => file.isFile());
+    for (const file of filteredFiles) {
       const filePath = path.join(pathToFolder, file.name);
       const fileStat = await stat(filePath);
       stdout.write('\n' + file.name + ' ' + fileStat.size);

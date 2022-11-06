@@ -1,10 +1,13 @@
 const path = require('path');
-const { mkdir, readFile, writeFile} = require('fs/promises');
+const { mkdir, readFile, writeFile, readdir} = require('fs/promises');
+const { createWriteStream } = require('fs');
 
 const distDir = path.join(__dirname, 'project-dist');
+const stylesDir = path.join(__dirname, 'styles');
 
 createDist();
 bundleHTML();
+bundleStyles();
 
 async function createDist() {
   try {
@@ -28,4 +31,19 @@ async function bundleHTML() {
     templateSource = templateSource.replace(component, componentFileSource);
   }
   await writeFile(path.join(distDir, 'index.html'), templateSource);
+}
+
+async function bundleStyles() {
+  try {
+    const bundlePath = path.join(distDir, 'style.css')
+    const files = await readdir(stylesDir, {withFileTypes: true});
+    const filteredFiles = files.filter( (file) => file.isFile() && path.extname(file.name) === '.css');
+    const stream = createWriteStream(bundlePath, 'utf-8');
+    for (const file of filteredFiles) {
+      const fileText = await readFile(path.join(stylesDir, file.name), 'utf-8');
+      stream.write(`${fileText}\n`);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
 }

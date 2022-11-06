@@ -11,7 +11,7 @@ const newDir = path.join(distDir, 'assets');
 createDist();
 bundleHTML();
 bundleStyles();
-copyDir();
+copyDir(oldDir, newDir);
 
 async function createDist() {
   try {
@@ -52,13 +52,13 @@ async function bundleStyles() {
   }
 }
 
-async function copyDir() {
+async function copyDir(oldDir, newDir) {
   try {
     await mkdir(newDir, { recursive: true });
     const files = await readdir(oldDir, {withFileTypes: true});
     for (const file of files) {
       if (file.isDirectory()) {
-        console.log('directory')
+        copyDir(path.join(oldDir, file.name), path.join(newDir, file.name));
       } else {
         copyFile(path.join(oldDir, file.name), path.join(newDir, file.name))
       }

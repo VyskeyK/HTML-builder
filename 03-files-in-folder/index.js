@@ -3,8 +3,6 @@ const {readdir, stat} = require('fs/promises');
 const path = require('path');
 const pathToFolder = path.join(__dirname, 'secret-folder');
 
-stdout.write(pathToFolder);
-
 findFilesInDir(pathToFolder);
 
 async function findFilesInDir(pathToFolder) {
@@ -14,7 +12,9 @@ async function findFilesInDir(pathToFolder) {
     for (const file of filteredFiles) {
       const filePath = path.join(pathToFolder, file.name);
       const fileStat = await stat(filePath);
-      stdout.write('\n' + file.name + ' ' + fileStat.size);
+      const fileInfo = (file.name).split('.');
+      fileInfo.push(fileStat.size);
+      stdout.write('\n' + fileInfo.join(' - '));
     }
   } catch (err) {
     console.error(err);

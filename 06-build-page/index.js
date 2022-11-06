@@ -1,13 +1,17 @@
 const path = require('path');
-const { mkdir, readFile, writeFile, readdir} = require('fs/promises');
+const { mkdir, readFile, writeFile, readdir, copyFile} = require('fs/promises');
 const { createWriteStream } = require('fs');
 
 const distDir = path.join(__dirname, 'project-dist');
 const stylesDir = path.join(__dirname, 'styles');
+const oldDir = path.join(__dirname, 'assets');
+const newDir = path.join(distDir, 'assets');
+
 
 createDist();
 bundleHTML();
 bundleStyles();
+copyDir();
 
 async function createDist() {
   try {
@@ -42,6 +46,22 @@ async function bundleStyles() {
     for (const file of filteredFiles) {
       const fileText = await readFile(path.join(stylesDir, file.name), 'utf-8');
       stream.write(`${fileText}\n`);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+async function copyDir() {
+  try {
+    await mkdir(newDir, { recursive: true });
+    const files = await readdir(oldDir, {withFileTypes: true});
+    for (const file of files) {
+      if (file.isDirectory()) {
+        console.log('directory')
+      } else {
+        copyFile(path.join(oldDir, file.name), path.join(newDir, file.name))
+      }
     }
   } catch (err) {
     console.error(err.message);

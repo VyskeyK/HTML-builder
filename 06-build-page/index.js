@@ -1,5 +1,5 @@
 const path = require('path');
-const { mkdir, readFile, writeFile, readdir, copyFile} = require('fs/promises');
+const { rm, mkdir, readFile, writeFile, readdir, copyFile} = require('fs/promises');
 const { createWriteStream } = require('fs');
 
 const distDir = path.join(__dirname, 'project-dist');
@@ -18,6 +18,7 @@ function createPage() {
 
 async function createDist() {
   try {
+    await rm(distDir, { force: true, recursive: true });
     await mkdir(distDir, { recursive: true });
   } catch (err) {
     console.error(err.message);

@@ -10,7 +10,7 @@ bundleStyles();
 async function bundleStyles() {
   try {
     const files = await readdir(stylesDir, {withFileTypes: true});
-    const filteredFiles = files.filter( (file) => file.isFile());
+    const filteredFiles = files.filter( (file) => file.isFile() && path.extname(file.name) === '.css');
     for (const file of filteredFiles) {
       console.log(file.name)
     }

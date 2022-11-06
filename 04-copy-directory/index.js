@@ -1,6 +1,6 @@
 const { stdout } = require('process');
 const path = require('path');
-const { mkdir, readdir } = require('fs/promises');
+const { mkdir, readdir,copyFile } = require('fs/promises');
 
 const oldDir = path.join(__dirname, 'files');
 const newDir = path.join(__dirname, 'files-copy');
@@ -13,8 +13,9 @@ async function copyDir() {
     const files = await readdir(oldDir, {withFileTypes: true});
     const filteredFiles = files.filter( (file) => file.isFile());
     for (const file of filteredFiles) {
-      stdout.write(file.name + '\n');
+      copyFile(path.join(oldDir, file.name), path.join(newDir, file.name))
     }
+    stdout.write(`Copying from ${oldDir} to ${newDir} completed successfully`);
   } catch (err) {
     console.error(err.message);
   }

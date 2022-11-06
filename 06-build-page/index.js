@@ -17,13 +17,15 @@ async function createDist() {
 async function bundleHTML() {
   const templatePath = path.join(__dirname, 'template.html');
   const componentsPath = path.join(__dirname, 'components');
-  const templateSource = await readFile(templatePath, 'utf-8');
+  let templateSource = await readFile(templatePath, 'utf-8');
   const templateComponents = templateSource.match(/{{(.*)}}/gi);
 
   for (const component of templateComponents) {
     const componentFile = component.replace('{{', '').replace('}}', '') + '.html';
     const componentPath = path.join(componentsPath, componentFile);
     const componentFileSource = await readFile(componentPath, 'utf-8');
-    console.log(componentFileSource);
+  
+    templateSource = templateSource.replace(component, componentFileSource);
+    console.log(templateSource);
   }
 }

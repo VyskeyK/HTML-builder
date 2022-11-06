@@ -7,11 +7,14 @@ const stylesDir = path.join(__dirname, 'styles');
 const oldDir = path.join(__dirname, 'assets');
 const newDir = path.join(distDir, 'assets');
 
+createPage()
 
-createDist();
-bundleHTML();
-bundleStyles();
-copyDir(oldDir, newDir);
+function createPage() {
+  createDist();
+  bundleHTML();
+  bundleStyles();
+  copyDir(oldDir, newDir);
+}
 
 async function createDist() {
   try {

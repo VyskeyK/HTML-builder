@@ -9,11 +9,11 @@ const newDir = path.join(distDir, 'assets');
 
 createPage()
 
-function createPage() {
-  createDist();
-  bundleHTML();
-  bundleStyles();
-  copyDir(oldDir, newDir);
+async function createPage() {
+  await createDist();
+  await bundleHTML();
+  await bundleStyles();
+  await copyDir(oldDir, newDir);
 }
 
 async function createDist() {
